@@ -48,9 +48,10 @@ export class UsersService {
     })
   }
 
-  isValidPasword(password: string, hash: string) {
+  isValidPassword(password: string, hash: string) {
     return compareSync(password, hash);
   }
+
   async update(updateUserDto: UpdateUserDto) {
     return await this.userModel.updateOne({ _id: updateUserDto._id }, { ...updateUserDto })
   }
