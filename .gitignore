@@ -7,7 +7,7 @@ logs
 *.log
 npm-debug.log*
 pnpm-debug.log*
-yarn-debug.log*
+yarn-debug.log* 
 yarn-error.log*
 lerna-debug.log*
 
@@ -33,5 +33,5 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
 documentation
+092c7c174173f592b17a09ecbce4cce219cbbee7
