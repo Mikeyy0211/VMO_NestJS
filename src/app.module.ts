@@ -1,22 +1,30 @@
-
-import { Inject, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongooseModule } from '@nestjs/mongoose'; // Assuming you have a MongoDB connection setup
+import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { APP_GUARD } from '@nestjs/core';
-
+import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
+import { CompaniesModule } from './companies/companies.module';
+import { JobsModule } from './jobs/jobs.module';
+import { FilesModule } from './files/files.module';
+import { ResumesModule } from './resumes/resumes.module';
+import { PermissionsModule } from './permissions/permissions.module';
+import { RolesModule } from './roles/roles.module';
+import { DatabasesModule } from './databases/databases.module';
 
 @Module({
   imports: [
-    // imports: [MongooseModule.forRoot('mongodb+srv://BulkyMike:E3ooLx2M9HnPwfBd@cluster0.wlzqjty.mongodb.net/'),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGO_URL'),
+        connectionFactory: (connection) => {
+          connection.plugin(softDeletePlugin);
+          return connection;
+        }
+
       }),
       inject: [ConfigService],
     }),
@@ -26,16 +34,16 @@ import { APP_GUARD } from '@nestjs/core';
     }),
 
     UsersModule,
-
-    AuthModule
+    AuthModule,
+    CompaniesModule,
+    JobsModule,
+    FilesModule,
+    ResumesModule,
+    PermissionsModule,
+    RolesModule,
+    DatabasesModule
   ],
   controllers: [AppController],
-  providers: [AppService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard,
-    // },
-  ],
-
+  providers: [AppService],
 })
 export class AppModule { }

@@ -1,4 +1,3 @@
-
 import {
     ExecutionContext,
     Injectable,
@@ -13,6 +12,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     constructor(private reflector: Reflector) {
         super();
     }
+
     canActivate(context: ExecutionContext) {
         const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
             context.getHandler(),
@@ -27,7 +27,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     handleRequest(err, user, info) {
         // You can throw an exception based on either "info" or "err" arguments
         if (err || !user) {
-            throw err || new UnauthorizedException("You are not authorized to access this resource");
+            throw err || new UnauthorizedException("Token không hợp lệ or không có token ở Bearer Token ở Header request!");
         }
         return user;
     }
