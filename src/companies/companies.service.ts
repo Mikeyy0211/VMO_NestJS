@@ -62,8 +62,9 @@ export class CompaniesService {
 
   async findOne(id: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new BadRequestException(`not found company with id= ${id}`)
+      throw new BadRequestException(`not found company with id=${id}`)
     }
+
     return await this.companyModel.findById(id);
   }
 
