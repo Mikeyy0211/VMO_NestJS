@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { ResumesService } from './resumes.service';
 import { CreateUserCvDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
-import { ResponseMessage, User } from 'src/decorator/customize';
+import { ResponseMessage, SkipCheckPermission, User } from 'src/decorator/customize';
 import { IUser } from 'src/users/users.interface';
 import { ApiTags } from '@nestjs/swagger';
+
 
 @ApiTags('resumes')
 @Controller('resumes')
@@ -40,6 +41,7 @@ export class ResumesController {
   }
 
   @Patch(':id')
+  @SkipCheckPermission() // Đúng tên decorator
   @ResponseMessage("Update status resume")
   updateStatus(@Param('id') id: string, @Body("status") status: string, @User() user: IUser) {
     return this.resumesService.update(id, status, user);

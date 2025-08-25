@@ -4,7 +4,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from './users.interface';
+import { ApiTags } from '@nestjs/swagger';
 
+
+@ApiTags('users')
 @Controller('users') // => /users
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
@@ -37,9 +40,10 @@ export class UsersController {
   }
 
   @ResponseMessage("Update a User")
-  @Patch()
-  async update(@Body() updateUserDto: UpdateUserDto, @User() user: IUser) {
-    let updatedUser = await this.usersService.update(updateUserDto, user);
+  @Patch(':id')
+  async update(@Body() updateUserDto: UpdateUserDto, @User() user: IUser,
+    @Param('id') id: string) {
+    let updatedUser = await this.usersService.update(updateUserDto, user, id);
     return updatedUser;
   }
 

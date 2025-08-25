@@ -14,6 +14,9 @@ import { Role, RoleDocument } from 'src/roles/schemas/role.schema';
 
 @Injectable()
 export class UsersService {
+  findOneByEmail(username: string) {
+    throw new Error('Method not implemented.');
+  }
 
   constructor(
     @InjectModel(UserM.name)
@@ -128,12 +131,14 @@ export class UsersService {
     //exclude >< include
   }
 
+  // FIX: Thêm _id vào select để populate đầy đủ thông tin role
+  // Trong src/users/users.service.ts
   findOneByUsername(username: string) {
     return this.userModel.findOne({
       email: username
     }).populate({
       path: "role",
-      select: { name: 1 }
+      select: { name: 1, _id: 1 } // <-- CẦN CÓ _id: 1
     });
   }
 
@@ -142,10 +147,11 @@ export class UsersService {
     return compareSync(password, hash);
   }
 
-  async update(updateUserDto: UpdateUserDto, user: IUser) {
-
+  async update(updateUserDto: UpdateUserDto, user: IUser, _id: string) {
+    if (!mongoose.Types.ObjectId.isValid(_id))
+      throw new BadRequestException(`not found use with id: ${_id}`);
     const updated = await this.userModel.updateOne(
-      { _id: updateUserDto._id },
+      { _id: _id },
       {
         ...updateUserDto,
         updatedBy: {
@@ -186,11 +192,12 @@ export class UsersService {
     )
   }
 
+  // FIX: Cũng thêm _id vào select cho findUserByToken
   findUserByToken = async (refreshToken: string) => {
     return await this.userModel.findOne({ refreshToken })
       .populate({
         path: "role",
-        select: { name: 1 }
+        select: { name: 1, _id: 1 } // <-- THÊM _id: 1
       });
   }
 

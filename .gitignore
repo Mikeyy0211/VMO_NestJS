@@ -35,3 +35,6 @@ lerna-debug.log*
 !.vscode/extensions.json
 documentation
 092c7c174173f592b17a09ecbce4cce219cbbee7
+
+!public/images/resume/.gitkeep
+!public/images/company/.gitkeep
